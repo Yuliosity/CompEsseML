@@ -17,6 +17,8 @@ let expr_of_string s = expr_of_sexp (Sexp.of_string s)
 
 let program_of_sexp body = {body = expr_of_sexp body}
 
+let program_of_string s = program_of_sexp (Sexp.of_string s)
+
 let%test_unit "LInt" =
   assert (expr_of_string "(+ 10 20)" =
     Prim2 {op = Add; l = Int 10; r = Int 20});
