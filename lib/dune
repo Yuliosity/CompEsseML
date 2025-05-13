@@ -1,6 +1,6 @@
 (library
-; (inline_tests)
+ (inline_tests)
  (name CompEsseML)
-; (preprocess
-;  (pps ppx_inline_test))
+ (preprocess
+  (pps ppx_inline_test))
 )
