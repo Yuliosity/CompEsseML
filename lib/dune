@@ -1,6 +1,7 @@
 (library
  (inline_tests)
  (name CompEsseML)
+ (libraries sexplib)
  (preprocess
   (pps ppx_inline_test))
 )
