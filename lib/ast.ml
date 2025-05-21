@@ -8,7 +8,7 @@ type expr =
   (* LInt *)
   | Int of int
   | Prim0 of prim0
-  | Prim1 of {op: prim1; e: expr}
+  | Prim1 of {op: prim1; arg: expr}
   | Prim2 of {op: prim2; l: expr; r: expr}
   (* LVar *)
   | Var of string

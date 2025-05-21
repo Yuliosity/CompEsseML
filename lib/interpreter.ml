@@ -8,7 +8,7 @@ class interp_lint = object (self)
   method interp_expr (env: env) : Ast.expr -> int = function
     | Prim0 Read -> read_int ()
     | Int i -> i
-    | Prim1 {op = Neg; e} -> -(self#interp_expr env e)
+    | Prim1 {op = Neg; arg} -> -(self#interp_expr env arg)
     | Prim2 {op; l; r} -> 
         let l = self#interp_expr env l in
         let r = self#interp_expr env r in
@@ -23,7 +23,7 @@ end
 let%test_unit "LInt" =
   let interp = new interp_lint in
   let eval_expr e = interp#interp {body = e} in
-  assert (eval_expr (Prim1 {op = Neg; e = Int 10}) = -10);
+  assert (eval_expr (Prim1 {op = Neg; arg = Int 10}) = -10);
   assert (eval_expr (Prim2 {op = Add; l = Int 32; r = Int 10}) = 42);
   let test3 = Prim2 {op = Sub; l = Int 52; r = Prim2 {op = Add; l = Int 5; r = Int 5}} in
   assert (eval_expr test3 = 42)

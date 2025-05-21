@@ -9,7 +9,7 @@ let rec uniquify_expr env =
   let mangle v i = v ^ "_" ^ string_of_int i in
   function
   | Var v -> Var (mangle v (StrMap.find v env))
-  | Prim1 {op; e} -> Prim1 {op; e = uniquify_expr env e}
+  | Prim1 {op; arg} -> Prim1 {op; arg = uniquify_expr env arg}
   | Prim2 {op; l; r} -> Prim2 {op; l = uniquify_expr env l; r = uniquify_expr env r}
   | Let {v; e; body} ->
     let i = match StrMap.find_opt v env with

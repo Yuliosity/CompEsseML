@@ -1,4 +1,4 @@
-type atom = Int of int | Var of string
+type atom = Lvar_mon.atom
 
 type expr =
   | Atom of atom
