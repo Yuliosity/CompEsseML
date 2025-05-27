@@ -9,12 +9,13 @@ class interp_lint = object (self)
     | Prim0 Read -> read_int ()
     | Int i -> i
     | Prim1 {op = Neg; arg} -> -(self#interp_expr env arg)
-    | Prim2 {op; l; r} -> 
-        let l = self#interp_expr env l in
-        let r = self#interp_expr env r in
-        (match op with
-          | Add -> l + r
-          | Sub -> l - r)
+    | Prim2 {op; l; r} -> begin
+      let l = self#interp_expr env l in
+      let r = self#interp_expr env r in
+      match op with
+        | Add -> l + r
+        | Sub -> l - r
+      end
     | _ -> failwith "Unreachable: interp_exp"
   method interp (p: Ast.program) =
     self#interp_expr StrMap.empty p.body
