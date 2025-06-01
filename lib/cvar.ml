@@ -1,16 +1,14 @@
 module In = Lvar_mon
 
-type atom = In.atom
+type atom = In.atom = Int of int | Var of string
 
-type prim0 = In.prim0
+type prim1 = In.prim1 = {op: Ast.prim1op; arg: atom}
 
-type prim1 = In.prim1
-
-type prim2 = In.prim2
+type prim2 = In.prim2 = {op: Ast.prim2op; l: atom; r: atom}
 
 type expr =
   | Atom of atom
-  | Prim0 of prim0
+  | Prim0 of Ast.prim0
   | Prim1 of prim1
   | Prim2 of prim2
 
@@ -45,7 +43,7 @@ let explicate_control {In.body} =
   {info = {locals = []}; body = ["start", explicate_tail body]}
 
 let%test "CVar simple" =
-  let p = {In.body = In.Prim2 {op = In.Add; l = In.Var "x"; r = In.Var "x"}} in
+  let p = {In.body = In.Prim2 {op = Ast.Add; l = In.Var "x"; r = In.Var "x"}} in
   let p = explicate_control p in
   p.body = [("start", Return (Prim2 {op = Add; l = Var "x"; r = Var "x"}))]
 
@@ -55,7 +53,7 @@ let%test "CVar 2" =
       v = "y"; e = In.Let {
         v = "x_1"; e = In.Atom (In.Int 20); body = In.Let {
           v = "x_2"; e = In.Atom (In.Int 22); body = In.Prim2 {
-            op = In.Add; l = In.Var "x_1"; r = In.Var "x_2"
+            op = Ast.Add; l = In.Var "x_1"; r = In.Var "x_2"
           }
         }
       };

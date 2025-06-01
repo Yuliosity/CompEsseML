@@ -1,16 +1,14 @@
 module In = Lvar_mon
 
-type atom = In.atom
+type atom = In.atom = Int of int | Var of string
 
-type prim0 = In.prim0
+type prim1 = In.prim1 = {op: Ast.prim1op; arg: atom}
 
-type prim1 = In.prim1
-
-type prim2 = In.prim2
+type prim2 = In.prim2 = {op: Ast.prim2op; l: atom; r: atom}
 
 type expr =
   | Atom of atom
-  | Prim0 of prim0
+  | Prim0 of Ast.prim0
   | Prim1 of prim1
   | Prim2 of prim2
 

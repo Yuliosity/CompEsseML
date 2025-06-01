@@ -2,15 +2,9 @@ module In = Ast
 
 type atom = Int of int | Var of string
 
-type prim0 = In.prim0
+type prim1 = {op: Ast.prim1op; arg: atom}
 
-type prim1op = Ast.prim1op = Neg
-
-type prim1 = {op: prim1op; arg: atom}
-
-type prim2op = Ast.prim2op = Add | Sub
-
-type prim2 = {op: prim2op; l: atom; r: atom}
+type prim2 = {op: Ast.prim2op; l: atom; r: atom}
 
 type expr =
   | Atom of atom
@@ -21,4 +15,4 @@ type expr =
 
 type program = {body: expr}
 
-val remove_complex_operands : Ast.expr -> expr
+val remove_complex_operands : In.expr -> expr
