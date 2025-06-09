@@ -1,45 +1,12 @@
-type reg = [`RAX | `RBX]
-
-let print_reg (reg: reg) = match reg with
-  | `RAX -> "%rax"
-  | `RBX -> "%rbx"
-
-type arg = [`Imm of int | reg | `Var of string]
-
-let print_arg arg = match arg with
-  | `Imm i -> string_of_int i
-  | `Var v -> v
-  | #reg as r -> print_reg r
-
-type op2 = Movq | Addq | Subq
-
-type label = Cvar.label
-
-type instr
-  = Movq of arg * arg
-  | Addq of arg * arg
-  | Subq of arg * arg
-  | Callq of label
-  | Jmp of label
-
-let print_instr instr =
-  let print_args (src, dst) = print_arg src ^ ", " ^ print_arg dst in
-  match instr with
-  | Movq (src, dst) -> "mov " ^ print_args (src, dst)
-  | Addq (src, dst) -> "addq " ^ print_args (src, dst)
-  | Subq (src, dst) -> "subq " ^ print_args (src, dst)
-  | Callq label -> "callq " ^ label
-  | Jmp label -> "jmp " ^ label
+open Asm
 
 module In = Cvar
 
 type info = In.info
 
-type section = instr list
+type program = {info: info; body: (label * block) list}
 
-type program = {info: info; body: (label * section) list}
-
-let atom = function
+let atom a : arg = match a with
   | In.Int i -> `Imm i
   | In.Var v -> `Var v
 
@@ -52,7 +19,7 @@ let process_assign v expr =
   match expr with
   | In.Atom a -> [movv (atom a)]
   | In.Prim0 Ast.Read -> [Callq "read_int"; movv `RAX]
-  | In.Prim1 {op = Ast.Neg; arg = arg2} -> [movv (`Imm 0); opv Ast.Sub (atom arg2)]
+  | In.Prim1 {op = Ast.Neg; arg = arg2} -> [Negq (atom arg2)]
   | In.Prim2 {op; l; r = In.Var v2}
     when v = `Var v2 -> [opv op (atom l)]
   | In.Prim2 {op; l; r} -> [movv (atom l); opv op (atom r)]
